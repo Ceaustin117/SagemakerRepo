@@ -118,7 +118,10 @@ Resources:
             Path: /invokeSagemakerAPI
   SageMakerRole:
       Type: AWS::IAM::Role
-      Properties:       
+      Properties:    
+        Tags: 
+         -  "Key" : "Project"
+            "Value" : "DFPoc"   
         AssumeRolePolicyDocument: 
           Version: '2012-10-17'
           Statement:
@@ -144,6 +147,7 @@ Resources:
                         {
                               "Effect": "Allow",
                               "Action": [
+                                  "sagemaker:AddTags",
                                   "cloudwatch:PutMetricData",                                  
                                   "logs:CreateLogGroup",
                                   "logs:CreateLogStream",
@@ -200,7 +204,10 @@ Resources:
               } 
   StepFunctionsRole:
       Type: AWS::IAM::Role
-      Properties:       
+      Properties: 
+        Tags: 
+         -  "Key" : "Project"
+            "Value" : "DFPoc"        
         AssumeRolePolicyDocument: 
           Version: '2012-10-17'
           Statement:
@@ -218,6 +225,9 @@ Resources:
       Type: 'AWS::IAM::ManagedPolicy'
       DependsOn: SageMakerRole
       Properties:
+        Tags: 
+         -  "Key" : "Project"
+            "Value" : "DFPoc"  
         Description: Step function use policy
         PolicyDocument: !Sub
             - |-
@@ -237,6 +247,7 @@ Resources:
                           {
                             "Effect": "Allow",
                             "Action": [
+                              "sagemaker:AddTags",
                               "sagemaker:CreateTrainingJob",
                               "sagemaker:DescribeTrainingJob",
                               "sagemaker:StopTrainingJob",
