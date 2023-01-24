@@ -247,7 +247,6 @@ Resources:
                           {
                             "Effect": "Allow",
                             "Action": [
-                              "sagemaker:AddTags",
                               "sagemaker:CreateTrainingJob",
                               "sagemaker:DescribeTrainingJob",
                               "sagemaker:StopTrainingJob",
@@ -267,6 +266,8 @@ Resources:
                           {
                             "Effect": "Allow",
                             "Action": [
+                              
+                              "sagemaker:AddTags",
                               "sagemaker:ListTags"
                             ],
                             "Resource": [
