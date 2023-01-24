@@ -127,9 +127,6 @@ Resources:
   SageMakerRole:
       Type: AWS::IAM::Role
       Properties:    
-        Tags: 
-         -  "Key" : "Project"
-            "Value" : "DFPoc"   
         AssumeRolePolicyDocument: 
           Version: '2012-10-17'
           Statement:
@@ -212,10 +209,7 @@ Resources:
               } 
   StepFunctionsRole:
       Type: AWS::IAM::Role
-      Properties: 
-        Tags: 
-         -  "Key" : "Project"
-            "Value" : "DFPoc"        
+      Properties:       
         AssumeRolePolicyDocument: 
           Version: '2012-10-17'
           Statement:
@@ -233,9 +227,6 @@ Resources:
       Type: 'AWS::IAM::ManagedPolicy'
       DependsOn: SageMakerRole
       Properties:
-        Tags: 
-         -  "Key" : "Project"
-            "Value" : "DFPoc"  
         Description: Step function use policy
         PolicyDocument: !Sub
             - |-
