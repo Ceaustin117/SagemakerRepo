@@ -2,8 +2,8 @@ import json
 import boto3
 sf = boto3.client('stepfunctions')
 def lambda_handler(event, context):
-    type= event.get('queryStringParameters').get('type')
-    token= event.get('queryStringParameters').get('token')    
+    type = event['queryStringParameters']['type']
+    token= event['queryStringParameters']['token']     
     
     if type =='success':
         sf.send_task_success(
