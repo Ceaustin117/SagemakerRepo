@@ -8,7 +8,7 @@ import os
 runtime= boto3.client('sagemaker-runtime')
 
 def lambda_handler(event, context):    
-    sagemaker_endpoint = event.get('queryStringParameters').get('sagemaker_endpoint')
+    sagemaker_endpoint = event['queryStringParameters']['sagemaker_endpoint']
     print(f'{sagemaker_endpoint=}')
     payload = json.loads(event['body'])
     print(f'{payload=}')
