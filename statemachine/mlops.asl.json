@@ -217,7 +217,7 @@
                         "Next": "FailState"
                     }
                 ],
-                "Next": "SuccessState"
+                "Next": "SageMaker Create Training Job2"
             },
             "SuccessState": {
                 "Type": "Succeed"
