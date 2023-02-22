@@ -15,11 +15,19 @@ Resources:
   SNSApprovalEmail:
     Type: AWS::SNS::Topic
     Properties:       
-      TopicName: SNSApprovalEmail     
+      TopicName: SNSApprovalEmail  
+  SNSApprovalEmail2:
+    Type: AWS::SNS::Topic
+    Properties:       
+      TopicName: SNSApprovalEmail2       
   HttpAPI:
     Type: AWS::Serverless::HttpApi
     Properties:      
-      StageName: v1      
+      StageName: v1  
+  HttpAPI2:
+    Type: AWS::Serverless::HttpApi
+    Properties:      
+      StageName: v1     
   MLOpsStateMachine:
     Type: AWS::Serverless::StateMachine # More info about State Machine Resource: https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-statemachine.html
     Properties:
@@ -28,6 +36,7 @@ Resources:
       DefinitionSubstitutions:
         CreateAndEmailLinkFnName: !Ref CreateAndEmailLinks
         UpdateSagemakerEndpointAPI: !GetAtt UpdateSagemakerEndpointAPI.Arn
+        UpdateSagemakerEndpointAPI2: !GetAtt UpdateSagemakerEndpointAPI2.Arn
         SagemakerRoleArn: !GetAtt SageMakerRole.Arn
         S3ModelBucket: !Ref S3ModelBucket
       Role: !GetAtt StepFunctionsRole.Arn
@@ -74,7 +83,36 @@ Resources:
         Variables:
           Endpoint_FunctionName: !Ref TestSagemakerEndpoint
           HttpApiID: !Ref HttpAPI
-          SNSArn: !Ref SNSApprovalEmail          
+          SNSArn: !Ref SNSApprovalEmail  
+  UpdateSagemakerEndpointAPI2:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-function.html
+    Properties:
+      CodeUri: ../functions/update_sagemakerEndpoint_API/
+      Handler: app.lambda_handler
+      Runtime: python3.8
+      Tags: 
+          Project: DFPoc
+      Timeout: 600
+      Policies:
+      - SNSPublishMessagePolicy:
+          TopicName: SNSApprovalEmail2
+      - Version: '2012-10-17' # Policy Document
+        Statement:
+          - Effect: Allow
+            Action:
+              - lambda:UpdateFunctionConfiguration
+            Resource: !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:${AWS::AccountId}:function:${TestSagemakerEndpoint2}
+      - Version: '2012-10-17' # Policy Document
+        Statement:
+          - Effect: Allow
+            Action:
+              - sagemaker:DescribeEndpoint
+            Resource: '*'  
+      Environment:
+        Variables:
+          Endpoint_FunctionName: !Ref TestSagemakerEndpoint2
+          HttpApiID: !Ref HttpAPI2
+          SNSArn: !Ref SNSApprovalEmail2          
   RespondEmailLinks:    
     Type: AWS::Serverless::Function # More info about Function Resource: https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-function.html
     Properties:
@@ -124,6 +162,28 @@ Resources:
             ApiId: !Ref HttpAPI
             Method: POST
             Path: /invokeSagemakerAPI
+  TestSagemakerEndpoint2:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-function.html
+    Properties:
+      CodeUri: ../functions/api_sagemaker_endpoint/
+      Handler: app.lambda_handler
+      Runtime: python3.8
+      Tags: 
+          Project: DFPoc
+      Policies:
+        - Version: '2012-10-17' # Policy Document
+          Statement:
+            - Effect: Allow
+              Action:
+                - sagemaker:InvokeEndpoint
+              Resource: '*'         
+      Events:
+        ExplicitApi:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpAPI2
+            Method: POST
+            Path: /invokeSagemakerAPI2
   SageMakerRole:
       Type: AWS::IAM::Role
       Properties:    
