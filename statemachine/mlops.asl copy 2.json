@@ -221,7 +221,7 @@
             "Type": "Task",
             "Resource": "arn:aws:states:::sagemaker:createTrainingJob.sync",
             "Parameters": {
-                "TrainingJobName.$": "$.commitID-2",
+                "TrainingJobName.$": "$.commitID2",
                 "ResourceConfig": {
                     "InstanceCount": 1,
                     "InstanceType": "ml.c4.2xlarge",
