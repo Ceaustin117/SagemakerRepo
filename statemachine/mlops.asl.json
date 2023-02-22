@@ -88,47 +88,6 @@
                 }
             },
             "ResultPath": "$.taskresult",
-            "Next": "SageMaker Create Transform Job",
-            "Catch": [
-                {
-                    "ErrorEquals": [
-                        "States.ALL"
-                    ],
-                    "Next": "FailState"
-                }
-            ]
-        },
-        "SageMaker Create Transform Job": {
-            "Type": "Task",
-            "Resource": "arn:aws:states:::sagemaker:createTransformJob.sync",
-            "Parameters": {
-                "ModelName.$": "$.TrainingJobName",
-                "TransformInput": {
-                    "SplitType": "Line",
-                    "CompressionType": "None",
-                    "ContentType": "text/csv",
-                    "DataSource": {
-                        "S3DataSource": {
-                            "S3DataType": "S3Prefix",
-                            "S3Uri": "s3://${S3ModelBucket}/iris.csv"
-                        }
-                    }
-                },
-                "TransformOutput": {
-                    "S3OutputPath.$": "States.Format('s3://${S3ModelBucket}/transform_output/{}/iris.csv', $.TrainingJobName)",
-                    "AssembleWith": "Line",
-                    "Accept": "text/csv"
-                },
-                "DataProcessing": {
-                    "InputFilter": "$[1:]"
-                },
-                "TransformResources": {
-                    "InstanceCount": 1,
-                    "InstanceType": "ml.m4.xlarge"
-                },
-                "TransformJobName.$": "$.TrainingJobName"
-            },
-            "ResultPath": "$.result",
             "Next": "SageMaker Create Training Job2",
             "Catch": [
                 {
