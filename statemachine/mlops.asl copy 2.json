@@ -129,7 +129,7 @@
                 "TransformJobName.$": "$.TrainingJobName"
             },
             "ResultPath": "$.result",
-            "Next": "SageMaker Create Training Job2",
+            "Next": "Send Approve/Reject Email Request",
             "Catch": [
                 {
                     "ErrorEquals": [
@@ -138,6 +138,84 @@
                     "Next": "FailState"
                 }
             ]
+        },
+        "Send Approve/Reject Email Request": {
+            "Type": "Task",
+            "Resource": "arn:aws:states:::lambda:invoke.waitForTaskToken",
+            "Parameters": {
+                "FunctionName": "${CreateAndEmailLinkFnName}",
+                "Payload": {
+                    "token.$": "$$.Task.Token",
+                    "s3_batch_output.$": "$.result.TransformOutput.S3OutputPath"
+                }
+            },
+            "ResultPath": "$.output",
+            "Next": "Sagemaker Create Endpoint Config",
+            "Catch": [
+                {
+                    "ErrorEquals": [
+                        "rejected"
+                    ],
+                    "ResultPath": "$.output",
+                    "Next": "FailState"
+                }
+            ]
+        },
+        "Sagemaker Create Endpoint Config": {
+            "Type": "Task",
+            "Resource": "arn:aws:states:::sagemaker:createEndpointConfig",
+            "Parameters": {
+                "EndpointConfigName.$": "$.TrainingJobName",
+                "ProductionVariants": [
+                    {
+                        "InitialInstanceCount": 1,
+                        "InitialVariantWeight": 1,
+                        "InstanceType": "ml.t2.medium",
+                        "ModelName.$": "$.TrainingJobName",
+                        "VariantName": "AllTraffic"
+                    }
+                ]
+            },
+            "ResultPath": "$.result",
+            "Next": "Sagemaker Create Endpoint",
+            "Catch": [
+                {
+                    "ErrorEquals": [
+                        "States.ALL"
+                    ],
+                    "Next": "FailState"
+                }
+            ]
+        },
+        "Sagemaker Create Endpoint": {
+            "Type": "Task",
+            "Resource": "arn:aws:states:::sagemaker:createEndpoint",
+            "Parameters": {
+                "EndpointName.$": "$.TrainingJobName",
+                "EndpointConfigName.$": "$.TrainingJobName"
+            },
+            "Next": "Send Email With API Endpoint",
+            "Catch": [
+                {
+                    "ErrorEquals": [
+                        "States.ALL"
+                    ],
+                    "Next": "FailState"
+                }
+            ]
+        },
+        "Send Email With API Endpoint": {
+            "Type": "Task",
+            "Resource": "${UpdateSagemakerEndpointAPI}",
+            "Catch": [
+                {
+                    "ErrorEquals": [
+                        "States.ALL"
+                    ],
+                    "Next": "FailState"
+                }
+            ],
+            "Next": "SageMaker Create Training Job2"
         },
         "SageMaker Create Training Job2": {
             "Type": "Task",
