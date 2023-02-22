@@ -257,7 +257,7 @@
                                     "batch_size": "11"
                                 },
                                 "AlgorithmSpecification": {
-                                    "TrainingImage.$": "$.imageUri",
+                                    "TrainingImage.$": "$.imageUrL",
                                     "TrainingInputMode": "File"
                                 },
                                 "OutputDataConfig": {
@@ -273,7 +273,7 @@
                                         "DataSource": {
                                             "S3DataSource": {
                                                 "S3DataType": "S3Prefix",
-                                                "S3Uri": "s3://${S3ModelBucket}/iris.csv",
+                                                "S3Uri": "s3://${S3ModelBucket}/iris2.csv",
                                                 "S3DataDistributionType": "FullyReplicated"
                                             }
                                         }
@@ -343,12 +343,12 @@
                                     "DataSource": {
                                         "S3DataSource": {
                                             "S3DataType": "S3Prefix",
-                                            "S3Uri": "s3://${S3ModelBucket}/iris.csv"
+                                            "S3Uri": "s3://${S3ModelBucket}/iris2.csv"
                                         }
                                     }
                                 },
                                 "TransformOutput": {
-                                    "S3OutputPath.$": "States.Format('s3://${S3ModelBucket}/transform_output/{}/iris.csv', $.TrainingJobName)",
+                                    "S3OutputPath.$": "States.Format('s3://${S3ModelBucket}/transform_output/{}/iris2.csv', $.TrainingJobName)",
                                     "AssembleWith": "Line",
                                     "Accept": "text/csv"
                                 },
