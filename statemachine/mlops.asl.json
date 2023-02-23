@@ -130,7 +130,7 @@
                 "TransformJobName.$": "$.TrainingJobName"
             },
             "ResultPath": "$.result",
-            "Next": "SageMaker Create Training Job2",
+            "Next": "Send Approve/Reject Email Request",
             "Catch": [
                 {
                     "ErrorEquals": [
@@ -209,7 +209,7 @@
         "Send Email With API Endpoint": {
             "Type": "Task",
             "Resource": "${UpdateSagemakerEndpointAPI}",
-            "ResultPath": "null",
+            "ResultPath": null,
             "Catch": [
                 {
                     "ErrorEquals": [
