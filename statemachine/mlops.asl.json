@@ -6,7 +6,7 @@
             "Type": "Task",
             "Resource": "arn:aws:states:::sagemaker:createTrainingJob.sync",
             "Parameters": {
-                "TrainingJobName.$": "$.commitID",
+                "TrainingJobName.$": "$.data.commitID",
                 "ResourceConfig": {
                     "InstanceCount": 1,
                     "InstanceType": "ml.c4.2xlarge",
@@ -24,7 +24,7 @@
                     "batch_size": "11"
                 },
                 "AlgorithmSpecification": {
-                    "TrainingImage.$": "$.imageUri",
+                    "TrainingImage.$": "$.data.imageUri",
                     "TrainingInputMode": "File"
                 },
                 "OutputDataConfig": {
@@ -102,7 +102,7 @@
             "Type": "Task",
             "Resource": "arn:aws:states:::sagemaker:createTrainingJob.sync",
             "Parameters": {
-                "TrainingJobName.$": "$.commitID2",
+                "TrainingJobName.$": "$data.commitIL",
                 "ResourceConfig": {
                     "InstanceCount": 1,
                     "InstanceType": "ml.c4.2xlarge",
@@ -120,7 +120,7 @@
                     "batch_size": "11"
                 },
                 "AlgorithmSpecification": {
-                    "TrainingImage.$": "$.imageUrL",
+                    "TrainingImage.$": "$data.imageUrL",
                     "TrainingInputMode": "File"
                 },
                 "OutputDataConfig": {
