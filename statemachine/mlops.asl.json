@@ -191,7 +191,7 @@
         "Sagemaker Create Endpoint": {
             "Type": "Task",
             "Resource": "arn:aws:states:::sagemaker:createEndpoint",
-            "ResultPath": "null",
+            "ResultPath": null,
             "Parameters": {
                 "EndpointName.$": "$.TrainingJobName",
                 "EndpointConfigName.$": "$.TrainingJobName"
