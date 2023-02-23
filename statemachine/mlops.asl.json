@@ -5,6 +5,7 @@
         "SageMaker Create Training Job": {
             "Type": "Task",
             "Resource": "arn:aws:states:::sagemaker:createTrainingJob.sync",
+            "ResultPath": "$.taskresult",
             "Parameters": {
                 "TrainingJobName.$": "$.commitID",
                 "ResourceConfig": {
