@@ -219,7 +219,6 @@
                 }
             ],
             "Next": "SageMaker Create Training Job2"
-        }
     },
     "SageMaker Create Training Job2": {
         "Type": "Task",
