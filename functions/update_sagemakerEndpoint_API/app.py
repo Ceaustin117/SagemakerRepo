@@ -15,7 +15,7 @@ sagemaker=boto3.client('sagemaker')
 
 def lambda_handler(event, context):
     print(event)     
-    sagemaker_endpoint= event['EndpointArn'].split('endpoint/')[1]       
+    sagemaker_endpoint= event['endpointresult']['EndpointArn'].split('endpoint/')[1]       
     sagemaker_response = sagemaker.describe_endpoint(
                 EndpointName=sagemaker_endpoint
             )        

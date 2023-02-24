@@ -19,7 +19,7 @@ def lambda_handler(event, context):
     api_id=os.environ['HttpApiID']
     sns_arn=os.environ['SNSArn']
     task_token= event['token']
-    url_template_sucess = f'https://{api_id}.execute-api.us-east-1.amazonaws.com/v1/respond?type=success&token":{task_token}'
+    url_template_sucess = f'https://{api_id}.execute-api.us-east-1.amazonaws.com/v1/respond?type=success&token:{task_token}'
     url_template_fail = f'https://{api_id}.execute-api.us-east-1.amazonaws.com/v1/respond?type=fail&token:{task_token}'
     #encoded_str=urllib.parse.urlencode(url_template_sucess)
     msg_body = f'''
