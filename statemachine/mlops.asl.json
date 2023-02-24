@@ -5,7 +5,7 @@
         "SageMaker Create Training Job": {
             "Type": "Task",
             "Resource": "arn:aws:states:::sagemaker:createTrainingJob.sync",
-            "ResultPath": "$.taskresult",
+            "ResultPath": "$.trainingtaskresult",
             "Parameters": {
                 "TrainingJobName.$": "$.commitID",
                 "ResourceConfig": {
@@ -424,7 +424,7 @@
     },
     "Send Email With API Endpoint2": {
         "Type": "Task",
-        "Resource": "${UpdateSagemakerEndpointAPI2}",
+        "Resource": "${UpdateSagemakerEndpointAPI}",
         "Catch": [
             {
                 "ErrorEquals": [
