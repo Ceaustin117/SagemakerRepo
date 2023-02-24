@@ -82,10 +82,10 @@
             "Resource": "arn:aws:states:::sagemaker:createModel",
             "Parameters": {
                 "ExecutionRoleArn": "${SagemakerRoleArn}",
-                "ModelName.$": "$.TrainingJobName",
+                "ModelName.$": "$.trainingtaskresult.TrainingJobName",
                 "PrimaryContainer": {
-                    "ModelDataUrl.$": "$.ModelArtifacts.S3ModelArtifacts",
-                    "Image.$": "$.AlgorithmSpecification.TrainingImage"
+                    "ModelDataUrl.$": "$.trainingtaskresult.ModelArtifacts.S3ModelArtifacts",
+                    "Image.$": "$.trainingtaskresult.AlgorithmSpecification.TrainingImage"
                 }
             },
             "ResultPath": "$.taskresult",
@@ -103,7 +103,7 @@
             "Type": "Task",
             "Resource": "arn:aws:states:::sagemaker:createTransformJob.sync",
             "Parameters": {
-                "ModelName.$": "$.TrainingJobName",
+                "ModelName.$": "$.trainingtaskresult.TrainingJobName",
                 "TransformInput": {
                     "SplitType": "Line",
                     "CompressionType": "None",
@@ -116,7 +116,7 @@
                     }
                 },
                 "TransformOutput": {
-                    "S3OutputPath.$": "States.Format('s3://${S3ModelBucket}/transform_output/{}/iris.csv', $.TrainingJobName)",
+                    "S3OutputPath.$": "States.Format('s3://${S3ModelBucket}/transform_output/{}/iris.csv', $.trainingtaskresult.TrainingJobName)",
                     "AssembleWith": "Line",
                     "Accept": "text/csv"
                 },
@@ -127,7 +127,7 @@
                     "InstanceCount": 1,
                     "InstanceType": "ml.m4.xlarge"
                 },
-                "TransformJobName.$": "$.TrainingJobName"
+                "TransformJobName.$": "$.trainingtaskresult.TrainingJobName"
             },
             "ResultPath": "$.result",
             "Next": "Send Approve/Reject Email Request",
@@ -166,13 +166,13 @@
             "Type": "Task",
             "Resource": "arn:aws:states:::sagemaker:createEndpointConfig",
             "Parameters": {
-                "EndpointConfigName.$": "$.TrainingJobName",
+                "EndpointConfigName.$": "$.trainingtaskresult.TrainingJobName",
                 "ProductionVariants": [
                     {
                         "InitialInstanceCount": 1,
                         "InitialVariantWeight": 1,
                         "InstanceType": "ml.t2.medium",
-                        "ModelName.$": "$.TrainingJobName",
+                        "ModelName.$": "$.trainingtaskresult.TrainingJobName",
                         "VariantName": "AllTraffic"
                     }
                 ]
@@ -193,8 +193,8 @@
             "Resource": "arn:aws:states:::sagemaker:createEndpoint",
             "ResultPath": null,
             "Parameters": {
-                "EndpointName.$": "$.TrainingJobName",
-                "EndpointConfigName.$": "$.TrainingJobName"
+                "EndpointName.$": "$.trainingtaskresult.TrainingJobName",
+                "EndpointConfigName.$": "$.trainingtaskresult.TrainingJobName"
             },
             "Next": "Send Email With API Endpoint",
             "Catch": [
