@@ -29,19 +29,19 @@
                     "TrainingInputMode": "File"
                 },
                 "OutputDataConfig": {
-                    "S3OutputPath": "s3://${S3ModelBucket}/output"
+                    "S3OutputPath": "s3://dev-ml-models-chris/output"
                 },
                 "StoppingCondition": {
                     "MaxRuntimeInSeconds": 100000
                 },
-                "RoleArn": "${SagemakerRoleArn}",
+                "RoleArn": "arn:aws:iam::026569106715:role/dev-sam-sf-sagemaker-workflow-chris-SageMakerRole-1C51MTNG6GKMR",
                 "InputDataConfig": [
                     {
                         "ChannelName": "training",
                         "DataSource": {
                             "S3DataSource": {
                                 "S3DataType": "S3Prefix",
-                                "S3Uri": "s3://${S3ModelBucket}/iris.csv",
+                                "S3Uri": "s3://dev-ml-models-chris/iris.csv",
                                 "S3DataDistributionType": "FullyReplicated"
                             }
                         }
@@ -81,7 +81,7 @@
             "Type": "Task",
             "Resource": "arn:aws:states:::sagemaker:createModel",
             "Parameters": {
-                "ExecutionRoleArn": "${SagemakerRoleArn}",
+                "ExecutionRoleArn": "arn:aws:iam::026569106715:role/dev-sam-sf-sagemaker-workflow-chris-SageMakerRole-1C51MTNG6GKMR",
                 "ModelName.$": "$.trainingtaskresult.TrainingJobName",
                 "PrimaryContainer": {
                     "ModelDataUrl.$": "$.trainingtaskresult.ModelArtifacts.S3ModelArtifacts",
@@ -111,12 +111,12 @@
                     "DataSource": {
                         "S3DataSource": {
                             "S3DataType": "S3Prefix",
-                            "S3Uri": "s3://${S3ModelBucket}/iris.csv"
+                            "S3Uri": "s3://dev-ml-models-chris/iris.csv"
                         }
                     }
                 },
                 "TransformOutput": {
-                    "S3OutputPath.$": "States.Format('s3://${S3ModelBucket}/transform_output/{}/iris.csv', $.trainingtaskresult.TrainingJobName)",
+                    "S3OutputPath.$": "States.Format('s3://dev-ml-models-chris/transform_output/{}/iris.csv', $.trainingtaskresult.TrainingJobName)",
                     "AssembleWith": "Line",
                     "Accept": "text/csv"
                 },
@@ -130,34 +130,12 @@
                 "TransformJobName.$": "$.trainingtaskresult.TrainingJobName"
             },
             "ResultPath": "$.result",
-            "Next": "Send Approve/Reject Email Request",
+            "Next": "Sagemaker Create Endpoint Config",
             "Catch": [
                 {
                     "ErrorEquals": [
                         "States.ALL"
                     ],
-                    "Next": "FailState"
-                }
-            ]
-        },
-        "Send Approve/Reject Email Request": {
-            "Type": "Task",
-            "Resource": "arn:aws:states:::lambda:invoke.waitForTaskToken",
-            "Parameters": {
-                "FunctionName": "${CreateAndEmailLinkFnName}",
-                "Payload": {
-                    "token.$": "$$.Task.Token",
-                    "s3_batch_output.$": "$.result.TransformOutput.S3OutputPath"
-                }
-            },
-            "ResultPath": "$.output",
-            "Next": "Sagemaker Create Endpoint Config",
-            "Catch": [
-                {
-                    "ErrorEquals": [
-                        "rejected"
-                    ],
-                    "ResultPath": "$.output",
                     "Next": "FailState"
                 }
             ]
@@ -208,7 +186,7 @@
         },
         "Send Email With API Endpoint": {
             "Type": "Task",
-            "Resource": "${UpdateSagemakerEndpointAPI}",
+            "Resource": "arn:aws:lambda:us-east-2:026569106715:function:dev-sam-sf-sagemaker-work-UpdateSagemakerEndpointA-819rsTD6LPN2",
             "ResultPath": null,
             "Catch": [
                 {
@@ -223,6 +201,7 @@
         "SageMaker Create Training Job2": {
             "Type": "Task",
             "Resource": "arn:aws:states:::sagemaker:createTrainingJob.sync",
+            "ResultPath": "$.trainingtaskresult2",
             "Parameters": {
                 "TrainingJobName.$": "$.commitIL",
                 "ResourceConfig": {
@@ -246,19 +225,19 @@
                     "TrainingInputMode": "File"
                 },
                 "OutputDataConfig": {
-                    "S3OutputPath": "s3://${S3ModelBucket}/output2"
+                    "S3OutputPath": "s3://dev-ml-models-chris/output2"
                 },
                 "StoppingCondition": {
                     "MaxRuntimeInSeconds": 100000
                 },
-                "RoleArn": "${SagemakerRoleArn}",
+                "RoleArn": "arn:aws:iam::026569106715:role/dev-sam-sf-sagemaker-workflow-chris-SageMakerRole-1C51MTNG6GKMR",
                 "InputDataConfig": [
                     {
                         "ChannelName": "training",
                         "DataSource": {
                             "S3DataSource": {
                                 "S3DataType": "S3Prefix",
-                                "S3Uri": "s3://${S3ModelBucket}/iris2.csv",
+                                "S3Uri": "s3://dev-ml-models-chris/iris2.csv",
                                 "S3DataDistributionType": "FullyReplicated"
                             }
                         }
@@ -298,11 +277,11 @@
             "Type": "Task",
             "Resource": "arn:aws:states:::sagemaker:createModel",
             "Parameters": {
-                "ExecutionRoleArn": "${SagemakerRoleArn}",
-                "ModelName.$": "$.TrainingJobName",
+                "ExecutionRoleArn": "arn:aws:iam::026569106715:role/dev-sam-sf-sagemaker-workflow-chris-SageMakerRole-1C51MTNG6GKMR",
+                "ModelName.$": "$.trainingtaskresult2.TrainingJobName",
                 "PrimaryContainer": {
-                    "ModelDataUrl.$": "$.ModelArtifacts.S3ModelArtifacts",
-                    "Image.$": "$.AlgorithmSpecification.TrainingImage"
+                    "ModelDataUrl.$": "$.trainingtaskresult2.ModelArtifacts.S3ModelArtifacts",
+                    "Image.$": "$.trainingtaskresult2.AlgorithmSpecification.TrainingImage"
                 }
             },
             "ResultPath": "$.taskresult",
@@ -320,7 +299,7 @@
             "Type": "Task",
             "Resource": "arn:aws:states:::sagemaker:createTransformJob.sync",
             "Parameters": {
-                "ModelName.$": "$.TrainingJobName",
+                "ModelName.$": "$.trainingtaskresult2.TrainingJobName",
                 "TransformInput": {
                     "SplitType": "Line",
                     "CompressionType": "None",
@@ -328,12 +307,12 @@
                     "DataSource": {
                         "S3DataSource": {
                             "S3DataType": "S3Prefix",
-                            "S3Uri": "s3://${S3ModelBucket}/iris2.csv"
+                            "S3Uri": "s3://dev-ml-models-chris/iris2.csv"
                         }
                     }
                 },
                 "TransformOutput": {
-                    "S3OutputPath.$": "States.Format('s3://${S3ModelBucket}/transform_output/{}/iris2.csv', $.TrainingJobName)",
+                    "S3OutputPath.$": "States.Format('s3://dev-ml-models-chris/transform_output/{}/iris2.csv', $.trainingtaskresult2.TrainingJobName)",
                     "AssembleWith": "Line",
                     "Accept": "text/csv"
                 },
@@ -344,10 +323,10 @@
                     "InstanceCount": 1,
                     "InstanceType": "ml.m4.xlarge"
                 },
-                "TransformJobName.$": "$.TrainingJobName"
+                "TransformJobName.$": "$.trainingtaskresult2.TrainingJobName"
             },
             "ResultPath": "$.result",
-            "Next": "Send Approve/Reject Email Request2",
+            "Next": "Sagemaker Create Endpoint Config2",
             "Catch": [
                 {
                     "ErrorEquals": [
@@ -357,39 +336,17 @@
                 }
             ]
         },
-        "Send Approve/Reject Email Request2": {
-            "Type": "Task",
-            "Resource": "arn:aws:states:::lambda:invoke.waitForTaskToken",
-            "Parameters": {
-                "FunctionName": "${CreateAndEmailLinkFnName}",
-                "Payload": {
-                    "token.$": "$$.Task.Token",
-                    "s3_batch_output.$": "$.result.TransformOutput.S3OutputPath"
-                }
-            },
-            "ResultPath": "$.output",
-            "Next": "Sagemaker Create Endpoint Config2",
-            "Catch": [
-                {
-                    "ErrorEquals": [
-                        "rejected"
-                    ],
-                    "ResultPath": "$.output",
-                    "Next": "FailState"
-                }
-            ]
-        },
         "Sagemaker Create Endpoint Config2": {
             "Type": "Task",
             "Resource": "arn:aws:states:::sagemaker:createEndpointConfig",
             "Parameters": {
-                "EndpointConfigName.$": "$.TrainingJobName",
+                "EndpointConfigName.$": "$.trainingtaskresult2.TrainingJobName",
                 "ProductionVariants": [
                     {
                         "InitialInstanceCount": 1,
                         "InitialVariantWeight": 1,
                         "InstanceType": "ml.t2.medium",
-                        "ModelName.$": "$.TrainingJobName",
+                        "ModelName.$": "$.trainingtaskresult2.TrainingJobName",
                         "VariantName": "AllTraffic"
                     }
                 ]
@@ -408,9 +365,10 @@
         "Sagemaker Create Endpoint2": {
             "Type": "Task",
             "Resource": "arn:aws:states:::sagemaker:createEndpoint",
+            "ResultPath": "$.endpointresult",
             "Parameters": {
-                "EndpointName.$": "$.TrainingJobName",
-                "EndpointConfigName.$": "$.TrainingJobName"
+                "EndpointName.$": "$.trainingtaskresult2.TrainingJobName",
+                "EndpointConfigName.$": "$.trainingtaskresult2.TrainingJobName"
             },
             "Next": "Send Email With API Endpoint2",
             "Catch": [
@@ -424,7 +382,202 @@
         },
         "Send Email With API Endpoint2": {
             "Type": "Task",
-            "Resource": "${UpdateSagemakerEndpointAPI}",
+            "Resource": "arn:aws:lambda:us-east-2:026569106715:function:dev-sam-sf-sagemaker-work-UpdateSagemakerEndpointA-819rsTD6LPN2",
+            "ResultPath": null,
+            "Catch": [
+                {
+                    "ErrorEquals": [
+                        "States.ALL"
+                    ],
+                    "Next": "FailState"
+                }
+            ],
+            "Next": "SageMaker Create Training Job3"
+        },
+        "SageMaker Create Training Job3": {
+            "Type": "Task",
+            "Resource": "arn:aws:states:::sagemaker:createTrainingJob.sync",
+            "Parameters": {
+                "TrainingJobName.$": "$.commitIK",
+                "ResourceConfig": {
+                    "InstanceCount": 1,
+                    "InstanceType": "ml.c4.2xlarge",
+                    "VolumeSizeInGB": 20
+                },
+                "HyperParameters": {
+                    "mode": "batch_skipgram",
+                    "epochs": "5",
+                    "min_count": "5",
+                    "sampling_threshold": "0.0001",
+                    "learning_rate": "0.025",
+                    "window_size": "5",
+                    "vector_dim": "300",
+                    "negative_samples": "5",
+                    "batch_size": "11"
+                },
+                "AlgorithmSpecification": {
+                    "TrainingImage.$": "$.imageUrK",
+                    "TrainingInputMode": "File"
+                },
+                "OutputDataConfig": {
+                    "S3OutputPath": "s3://dev-ml-models-chris/output2"
+                },
+                "StoppingCondition": {
+                    "MaxRuntimeInSeconds": 100000
+                },
+                "RoleArn": "arn:aws:iam::026569106715:role/dev-sam-sf-sagemaker-workflow-chris-SageMakerRole-1C51MTNG6GKMR",
+                "InputDataConfig": [
+                    {
+                        "ChannelName": "training",
+                        "DataSource": {
+                            "S3DataSource": {
+                                "S3DataType": "S3Prefix",
+                                "S3Uri": "s3://dev-ml-models-chris/iris2.csv",
+                                "S3DataDistributionType": "FullyReplicated"
+                            }
+                        }
+                    }
+                ]
+            },
+            "Retry": [
+                {
+                    "ErrorEquals": [
+                        "SageMaker.AmazonSageMakerException"
+                    ],
+                    "IntervalSeconds": 1,
+                    "MaxAttempts": 1,
+                    "BackoffRate": 1.1
+                },
+                {
+                    "ErrorEquals": [
+                        "SageMaker.ResourceLimitExceededException"
+                    ],
+                    "IntervalSeconds": 60,
+                    "MaxAttempts": 1,
+                    "BackoffRate": 1
+                }
+            ],
+            "Catch": [
+                {
+                    "ErrorEquals": [
+                        "States.ALL"
+                    ],
+                    "ResultPath": "$.cause",
+                    "Next": "FailState"
+                }
+            ],
+            "Next": "SageMaker Create Model3"
+        },
+        "SageMaker Create Model3": {
+            "Type": "Task",
+            "Resource": "arn:aws:states:::sagemaker:createModel",
+            "Parameters": {
+                "ExecutionRoleArn": "arn:aws:iam::026569106715:role/dev-sam-sf-sagemaker-workflow-chris-SageMakerRole-1C51MTNG6GKMR",
+                "ModelName.$": "$.trainingtaskresult.TrainingJobName",
+                "PrimaryContainer": {
+                    "ModelDataUrl.$": "$.trainingtaskresult.ModelArtifacts.S3ModelArtifacts",
+                    "Image.$": "$.trainingtaskresult.AlgorithmSpecification.TrainingImage"
+                }
+            },
+            "ResultPath": "$.taskresult",
+            "Next": "SageMaker Create Transform Job3",
+            "Catch": [
+                {
+                    "ErrorEquals": [
+                        "States.ALL"
+                    ],
+                    "Next": "FailState"
+                }
+            ]
+        },
+        "SageMaker Create Transform Job3": {
+            "Type": "Task",
+            "Resource": "arn:aws:states:::sagemaker:createTransformJob.sync",
+            "Parameters": {
+                "ModelName.$": "$.trainingtaskresult.TrainingJobName",
+                "TransformInput": {
+                    "SplitType": "Line",
+                    "CompressionType": "None",
+                    "ContentType": "text/csv",
+                    "DataSource": {
+                        "S3DataSource": {
+                            "S3DataType": "S3Prefix",
+                            "S3Uri": "s3://dev-ml-models-chris/iris2.csv"
+                        }
+                    }
+                },
+                "TransformOutput": {
+                    "S3OutputPath.$": "States.Format('s3://dev-ml-models-chris/transform_output/{}/iris2.csv', $.trainingtaskresult.TrainingJobName)",
+                    "AssembleWith": "Line",
+                    "Accept": "text/csv"
+                },
+                "DataProcessing": {
+                    "InputFilter": "$[1:]"
+                },
+                "TransformResources": {
+                    "InstanceCount": 1,
+                    "InstanceType": "ml.m4.xlarge"
+                },
+                "TransformJobName.$": "$.trainingtaskresult.TrainingJobName"
+            },
+            "ResultPath": "$.result",
+            "Next": "Sagemaker Create Endpoint Config3",
+            "Catch": [
+                {
+                    "ErrorEquals": [
+                        "States.ALL"
+                    ],
+                    "Next": "FailState"
+                }
+            ]
+        },
+        "Sagemaker Create Endpoint Config3": {
+            "Type": "Task",
+            "Resource": "arn:aws:states:::sagemaker:createEndpointConfig",
+            "Parameters": {
+                "EndpointConfigName.$": "$.trainingtaskresult.TrainingJobName",
+                "ProductionVariants": [
+                    {
+                        "InitialInstanceCount": 1,
+                        "InitialVariantWeight": 1,
+                        "InstanceType": "ml.t2.medium",
+                        "ModelName.$": "$.trainingtaskresult.TrainingJobName",
+                        "VariantName": "AllTraffic"
+                    }
+                ]
+            },
+            "ResultPath": "$.result",
+            "Next": "Sagemaker Create Endpoint3",
+            "Catch": [
+                {
+                    "ErrorEquals": [
+                        "States.ALL"
+                    ],
+                    "Next": "FailState"
+                }
+            ]
+        },
+        "Sagemaker Create Endpoint3": {
+            "Type": "Task",
+            "Resource": "arn:aws:states:::sagemaker:createEndpoint",
+            "ResultPath": "$.endpointresult",
+            "Parameters": {
+                "EndpointName.$": "$.trainingtaskresult.TrainingJobName",
+                "EndpointConfigName.$": "$.trainingtaskresult.TrainingJobName"
+            },
+            "Next": "Send Email With API Endpoint3",
+            "Catch": [
+                {
+                    "ErrorEquals": [
+                        "States.ALL"
+                    ],
+                    "Next": "FailState"
+                }
+            ]
+        },
+        "Send Email With API Endpoint3": {
+            "Type": "Task",
+            "Resource": "arn:aws:lambda:us-east-2:026569106715:function:dev-sam-sf-sagemaker-work-UpdateSagemakerEndpointA-819rsTD6LPN2",
             "ResultPath": "$.endpointresult",
             "Catch": [
                 {
