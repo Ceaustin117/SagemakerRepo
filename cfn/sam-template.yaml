@@ -226,8 +226,8 @@ Resources:
                                 "s3:DeleteObject"
                             ],
                             "Resource": [
-                                "arn:aws:s3:::${S3ModelBucket}",
-                                "arn:aws:s3:::${S3ModelBucket}/*"
+                                "arn:aws:s3:::development-df/cicd-devops/${S3ModelBucket}",
+                                "arn:aws:s3:::development-df/cicd-devops/${S3ModelBucket}/*"
                             ]
                         }
                       ]

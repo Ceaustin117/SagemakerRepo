@@ -40,7 +40,7 @@
                     "TrainingInputMode": "File"
                 },
                 "OutputDataConfig": {
-                    "S3OutputPath": "s3://development-df/cicd-devops/${S3ModelBucket}/output"
+                    "S3OutputPath": "s3://development-df/cicd-devops/${S3ModelBucket}/output-3ma"
                 },
                 "StoppingCondition": {
                     "MaxRuntimeInSeconds": 100000
@@ -247,7 +247,7 @@
                     "TrainingInputMode": "File"
                 },
                 "OutputDataConfig": {
-                    "S3OutputPath": "s3://development-df/cicd-devops/${S3ModelBucket}/output"
+                    "S3OutputPath": "s3://development-df/cicd-devops/${S3ModelBucket}/output-arima"
                 },
                 "StoppingCondition": {
                     "MaxRuntimeInSeconds": 100000
@@ -453,7 +453,7 @@
                     "TrainingInputMode": "File"
                 },
                 "OutputDataConfig": {
-                    "S3OutputPath": "s3://development-df/cicd-devops/${S3ModelBucket}/output2"
+                    "S3OutputPath": "s3://development-df/cicd-devops/${S3ModelBucket}/output-ets"
                 },
                 "StoppingCondition": {
                     "MaxRuntimeInSeconds": 100000
