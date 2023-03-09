@@ -334,7 +334,7 @@
                     }
                 },
                 "TransformOutput": {
-                    "S3OutputPath.$": "States.Format('s3://development-df/cicd-devops/dev-ml-models-chris/transform_output/{}/iris.csv', $.trainingtaskresult.TrainingJobName)",
+                    "S3OutputPath.$": "States.Format('s3://development-df/cicd-devops/dev-chris-ml-models/transform_output/{}/iris.csv', $.trainingtaskresult.TrainingJobName)",
                     "AssembleWith": "Line",
                     "Accept": "text/csv"
                 },
