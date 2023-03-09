@@ -420,7 +420,7 @@
             "Type": "Choice",
             "Choices": [
                 {
-                    "Variable": "$.train3ma",
+                    "Variable": "$.trainEts",
                     "StringEquals": "true",
                     "Next": "SageMaker Create Training Job Ets"
                 }

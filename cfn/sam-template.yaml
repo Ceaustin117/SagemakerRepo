@@ -228,6 +228,8 @@ Resources:
                             "Resource": [
                                 "arn:aws:s3:::development-df/cicd-devops/${S3ModelBucket}",
                                 "arn:aws:s3:::development-df/cicd-devops/${S3ModelBucket}/*"
+                                "arn:aws:s3:::development-df/*",
+                                "arn:aws:s3:::development-df",
                             ]
                         }
                       ]
