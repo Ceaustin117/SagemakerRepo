@@ -45,7 +45,7 @@
                 "StoppingCondition": {
                     "MaxRuntimeInSeconds": 100000
                 },
-                "RoleArn": "arn:aws:iam::026569106715:role/dev-sam-sf-sagemaker-workflow-chris-SageMakerRole-QU6XWSBEBYKA",
+                "RoleArn": "${SagemakerRoleArn}",
                 "InputDataConfig": [
                     {
                         "ChannelName": "training",
@@ -92,7 +92,7 @@
             "Type": "Task",
             "Resource": "arn:aws:states:::sagemaker:createModel",
             "Parameters": {
-                "ExecutionRoleArn": "arn:aws:iam::026569106715:role/dev-sam-sf-sagemaker-workflow-chris-SageMakerRole-QU6XWSBEBYKA",
+                "ExecutionRoleArn": "${SagemakerRoleArn}",
                 "ModelName.$": "$.trainingtaskresult.TrainingJobName",
                 "PrimaryContainer": {
                     "ModelDataUrl.$": "$.trainingtaskresult.ModelArtifacts.S3ModelArtifacts",
@@ -252,7 +252,7 @@
                 "StoppingCondition": {
                     "MaxRuntimeInSeconds": 100000
                 },
-                "RoleArn": "arn:aws:iam::026569106715:role/dev-sam-sf-sagemaker-workflow-chris-SageMakerRole-QU6XWSBEBYKA",
+                "RoleArn": "${SagemakerRoleArn}",
                 "InputDataConfig": [
                     {
                         "ChannelName": "training",
@@ -299,7 +299,7 @@
             "Type": "Task",
             "Resource": "arn:aws:states:::sagemaker:createModel",
             "Parameters": {
-                "ExecutionRoleArn": "arn:aws:iam::026569106715:role/dev-sam-sf-sagemaker-workflow-chris-SageMakerRole-QU6XWSBEBYKA",
+                "ExecutionRoleArn": "${SagemakerRoleArn}",
                 "ModelName.$": "$.trainingtaskresult2.TrainingJobName",
                 "PrimaryContainer": {
                     "ModelDataUrl.$": "$.trainingtaskresult2.ModelArtifacts.S3ModelArtifacts",
