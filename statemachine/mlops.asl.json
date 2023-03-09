@@ -40,7 +40,7 @@
                     "TrainingInputMode": "File"
                 },
                 "OutputDataConfig": {
-                    "S3OutputPath": "s3://dev-ml-models-chris/output"
+                    "S3OutputPath": "s3://development-df/cicd-devops/${S3ModelBucket}/output"
                 },
                 "StoppingCondition": {
                     "MaxRuntimeInSeconds": 100000
@@ -52,7 +52,7 @@
                         "DataSource": {
                             "S3DataSource": {
                                 "S3DataType": "S3Prefix",
-                                "S3Uri": "s3://dev-ml-models-chris/iris.csv",
+                                "S3Uri": "s3://development-df/cicd-devops/${S3ModelBucket}/iris.csv",
                                 "S3DataDistributionType": "FullyReplicated"
                             }
                         }
@@ -122,12 +122,12 @@
                     "DataSource": {
                         "S3DataSource": {
                             "S3DataType": "S3Prefix",
-                            "S3Uri": "s3://dev-ml-models-chris/iris.csv"
+                            "S3Uri": "s3://development-df/cicd-devops/${S3ModelBucket}/iris.csv"
                         }
                     }
                 },
                 "TransformOutput": {
-                    "S3OutputPath.$": "States.Format('s3://dev-ml-models-chris/transform_output/{}/iris.csv', $.trainingtaskresult.TrainingJobName)",
+                    "S3OutputPath.$": "States.Format('s3://development-df/cicd-devops/${S3ModelBucket}/transform_output/{}/iris.csv', $.trainingtaskresult.TrainingJobName)",
                     "AssembleWith": "Line",
                     "Accept": "text/csv"
                 },
@@ -197,7 +197,7 @@
         },
         "Send Email With API Endpoint 3ma": {
             "Type": "Task",
-            "Resource": "arn:aws:lambda:us-east-2:026569106715:function:dev-sam-sf-sagemaker-work-UpdateSagemakerEndpointA-mUMhurf1EiB7",
+            "Resource": "${UpdateSagemakerEndpointAPI}",
             "ResultPath": null,
             "Catch": [
                 {
@@ -218,7 +218,7 @@
                     "Next": "SageMaker Create Training Job Arima"
                 }
             ],
-            "Default": "SuccessState"
+            "Default": "ChoiceState Ets"
         },
         "SageMaker Create Training Job Arima": {
             "Type": "Task",
@@ -247,7 +247,7 @@
                     "TrainingInputMode": "File"
                 },
                 "OutputDataConfig": {
-                    "S3OutputPath": "s3://dev-ml-models-chris/output"
+                    "S3OutputPath": "s3://development-df/cicd-devops/${S3ModelBucket}/output"
                 },
                 "StoppingCondition": {
                     "MaxRuntimeInSeconds": 100000
@@ -259,7 +259,7 @@
                         "DataSource": {
                             "S3DataSource": {
                                 "S3DataType": "S3Prefix",
-                                "S3Uri": "s3://dev-ml-models-chris/iris.csv",
+                                "S3Uri": "s3://development-df/cicd-devops/${S3ModelBucket}/iris.csv",
                                 "S3DataDistributionType": "FullyReplicated"
                             }
                         }
@@ -329,12 +329,12 @@
                     "DataSource": {
                         "S3DataSource": {
                             "S3DataType": "S3Prefix",
-                            "S3Uri": "s3://dev-ml-models-chris/iris.csv"
+                            "S3Uri": "s3://development-df/cicd-devops/${S3ModelBucket}/iris.csv"
                         }
                     }
                 },
                 "TransformOutput": {
-                    "S3OutputPath.$": "States.Format('s3://dev-ml-models-chris/transform_output/{}/iris.csv', $.trainingtaskresult.TrainingJobName)",
+                    "S3OutputPath.$": "States.Format('s3://development-df/cicd-devops/dev-ml-models-chris/transform_output/{}/iris.csv', $.trainingtaskresult.TrainingJobName)",
                     "AssembleWith": "Line",
                     "Accept": "text/csv"
                 },
@@ -404,7 +404,7 @@
         },
         "Send Email With API Endpoint Arima": {
             "Type": "Task",
-            "Resource": "arn:aws:lambda:us-east-2:026569106715:function:dev-sam-sf-sagemaker-work-UpdateSagemakerEndpointA-mUMhurf1EiB7",
+            "Resource": "${UpdateSagemakerEndpointAPI}",
             "ResultPath": null,
             "Catch": [
                 {
@@ -453,7 +453,7 @@
                     "TrainingInputMode": "File"
                 },
                 "OutputDataConfig": {
-                    "S3OutputPath": "s3://dev-ml-models-chris/output2"
+                    "S3OutputPath": "s3://development-df/cicd-devops/${S3ModelBucket}/output2"
                 },
                 "StoppingCondition": {
                     "MaxRuntimeInSeconds": 100000
@@ -465,7 +465,7 @@
                         "DataSource": {
                             "S3DataSource": {
                                 "S3DataType": "S3Prefix",
-                                "S3Uri": "s3://dev-ml-models-chris/iris2.csv",
+                                "S3Uri": "s3://development-df/cicd-devops/${S3ModelBucket}/iris2.csv",
                                 "S3DataDistributionType": "FullyReplicated"
                             }
                         }
@@ -535,12 +535,12 @@
                     "DataSource": {
                         "S3DataSource": {
                             "S3DataType": "S3Prefix",
-                            "S3Uri": "s3://dev-ml-models-chris/iris2.csv"
+                            "S3Uri": "s3://development-df/cicd-devops/${S3ModelBucket}/iris2.csv"
                         }
                     }
                 },
                 "TransformOutput": {
-                    "S3OutputPath.$": "States.Format('s3://dev-ml-models-chris/transform_output/{}/iris2.csv', $.trainingtaskresult.TrainingJobName)",
+                    "S3OutputPath.$": "States.Format('s3://development-df/cicd-devops/${S3ModelBucket}/transform_output/{}/iris2.csv', $.trainingtaskresult.TrainingJobName)",
                     "AssembleWith": "Line",
                     "Accept": "text/csv"
                 },
